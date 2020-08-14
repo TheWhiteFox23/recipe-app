@@ -124,7 +124,15 @@ public class Recipe {
     }
 
     public void setIngredients(Set<Ingredient> ingredients) {
+        ingredients.forEach(ingredient -> {
+            if(ingredient.getRecipe() == null) ingredient.setRecipe(this);
+        });
         this.ingredients = ingredients;
+    }
+
+    public void addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        ingredients.add(ingredient);
     }
 
     public Difficulty getDifficulty() {

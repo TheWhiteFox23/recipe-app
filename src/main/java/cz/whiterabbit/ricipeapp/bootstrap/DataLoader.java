@@ -8,12 +8,16 @@ import cz.whiterabbit.ricipeapp.repositories.CategoryRepository;
 import cz.whiterabbit.ricipeapp.repositories.RecipeRepository;
 import cz.whiterabbit.ricipeapp.repositories.UnitOfMeasureRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
-public class DataLoader implements CommandLineRunner {
+public class DataLoader implements /*CommandLineRunner,*/ ApplicationListener<ContextRefreshedEvent> {
 
     private RecipeRepository recipeRepository;
     private CategoryRepository categoryRepository;
@@ -26,12 +30,10 @@ public class DataLoader implements CommandLineRunner {
     }
 
 
-    @Override
+    /*@Override
     public void run(String... args) throws Exception {
-        System.out.println("Creating recipe : Perfect Guacamole");
-        insertPerfectGuacamole();
 
-    }
+    }*/
 
     private void insertPerfectGuacamole() {
         Recipe perfectGuacamole = new Recipe();
@@ -64,75 +66,25 @@ public class DataLoader implements CommandLineRunner {
 
     private void setIngredientsGuacamole(Recipe perfectGuacamole) {
         //INGREDIENT
-
+        Set<Ingredient> ingredientSet = new HashSet<>();
         //Avocado
-        Ingredient avocado = new Ingredient();
-        avocado.setAmount(new BigDecimal(2));
-        avocado.setDescription("Avocado");
-        avocado.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Peace").get());
-        perfectGuacamole.getIngredients().add(avocado);
+        ingredientSet.add(new Ingredient("Avocado",new BigDecimal(2), unitOfMeasureRepository.findByDescription("Peace").get()));
+        ingredientSet.add(new Ingredient("Salt",new BigDecimal(0.25), unitOfMeasureRepository.findByDescription("Teaspoon").get()));
+        ingredientSet.add(new Ingredient("Fresh lime juice",new BigDecimal(1), unitOfMeasureRepository.findByDescription("Tablespoon").get()));
+        ingredientSet.add(new Ingredient("Red Onion",new BigDecimal(2), unitOfMeasureRepository.findByDescription("Tablespoon").get()));
+        ingredientSet.add(new Ingredient("Serrano chiles",new BigDecimal(2), unitOfMeasureRepository.findByDescription("Peace").get()));
+        ingredientSet.add(new Ingredient("Cilantro",new BigDecimal(2), unitOfMeasureRepository.findByDescription("Tablespoon").get()));
+        ingredientSet.add(new Ingredient("Black Pepper",new BigDecimal(1), unitOfMeasureRepository.findByDescription("Dash").get()));
+        ingredientSet.add(new Ingredient("Ripe Tomato",new BigDecimal(0.5), unitOfMeasureRepository.findByDescription("Peace").get()));
+        ingredientSet.add(new Ingredient("Red radishes",new BigDecimal(1), unitOfMeasureRepository.findByDescription("Peace").get()));
+        ingredientSet.add(new Ingredient("Tortilla chips",new BigDecimal(2), unitOfMeasureRepository.findByDescription("Package").get()));
 
-        //Salt
-        Ingredient salt = new Ingredient();
-        salt.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Teaspoon").get());
-        salt.setAmount(new BigDecimal(0.25));
-        salt.setDescription("Salt");
-        perfectGuacamole.getIngredients().add(salt);
+        perfectGuacamole.setIngredients(ingredientSet);
+    }
 
-        //Lime Juice
-        Ingredient limeJuice = new Ingredient();
-        limeJuice.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Tablespoon").get());
-        limeJuice.setAmount(new BigDecimal(1));
-        limeJuice.setDescription("Fresh lime juice");
-        perfectGuacamole.getIngredients().add(limeJuice);
-
-        //Red Onion
-        Ingredient redOnion = new Ingredient();
-        redOnion.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Tablespoon").get());
-        redOnion.setDescription("Red Onion");
-        redOnion.setAmount(new BigDecimal(2));
-        perfectGuacamole.getIngredients().add(redOnion);
-
-        //Serrano chiles
-        Ingredient serranoChiles = new Ingredient();
-        serranoChiles.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Peace").get());
-        serranoChiles.setDescription("Serrano chiles");
-        serranoChiles.setAmount(new BigDecimal(2));
-        perfectGuacamole.getIngredients().add(serranoChiles);
-
-        //Cilantro
-        Ingredient cilantro = new Ingredient();
-        cilantro.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Tablespoon").get());
-        cilantro.setDescription("Cilantro");
-        cilantro.setAmount(new BigDecimal(2));
-        perfectGuacamole.getIngredients().add(cilantro);
-
-        //Black pepper
-        Ingredient blackPepper = new Ingredient();
-        blackPepper.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Dash").get());
-        blackPepper.setDescription("Black Pepper");
-        blackPepper.setAmount(new BigDecimal(1));
-        perfectGuacamole.getIngredients().add(blackPepper);
-
-        //Tomato
-        Ingredient tomato = new Ingredient();
-        tomato.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Peace").get());
-        tomato.setDescription("Ripe Tomato");
-        tomato.setAmount(new BigDecimal(0.5));
-        perfectGuacamole.getIngredients().add(tomato);
-
-        //Red radishes
-        Ingredient redRadishes = new Ingredient();
-        redRadishes.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Peace").get());
-        redRadishes.setDescription("Red radishes");
-        redRadishes.setAmount(new BigDecimal(1));
-        perfectGuacamole.getIngredients().add(redRadishes);
-
-        //Tortilla chips
-        Ingredient tortillaChips = new Ingredient();
-        tortillaChips.setUnitOfMeasure(unitOfMeasureRepository.findByDescription("Package").get());
-        tortillaChips.setDescription("Tortilla chips");
-        tortillaChips.setAmount(new BigDecimal(1));
-        perfectGuacamole.getIngredients().add(tortillaChips);
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        System.out.println("Creating recipe : Perfect Guacamole");
+        insertPerfectGuacamole();
     }
 }
