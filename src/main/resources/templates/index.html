@@ -7,5 +7,34 @@
 <body>
 <h1 th:text="'My recipes !!!!'">Index Page</h1>
 
+<table>
+    <thead>
+        <tr>
+            <td>Description</td>
+            <td>Preperation Time</td>
+            <td>Cook Time</td>
+            <td>Servings</td>
+            <td>source</td>
+            <td>url</td>
+            <td>directions</td>
+            <td>ingredients</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="recipe : ${recipes}">
+            <td th:text="${recipe.description}">Description</td>
+            <td th:text="${recipe.prepTime}">Preperation Time</td>
+            <td th:text="${recipe.cookTime}">Cook Time</td>
+            <td th:text="${recipe.servings}">Servings</td>
+            <td th:text="${recipe.source}">source</td>
+            <td th:text="${recipe.url}">url</td>
+            <td th:text="${recipe.directions}">directions</td>
+            <td th:each="ingredient : ${recipe.ingredients}">
+                <p th:text="${ingredient.description}"></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 </body>
 </html>
