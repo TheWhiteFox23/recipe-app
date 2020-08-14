@@ -59,12 +59,6 @@ public class DataLoader implements /*CommandLineRunner,*/ ApplicationListener<Co
         perfectGuacamole.setDescription("Perfect Guacamole");
         perfectGuacamole.setDifficulty(Difficulty.EASY);
 
-        setIngredientsGuacamole(perfectGuacamole);
-
-        recipeRepository.save(perfectGuacamole);
-    }
-
-    private void setIngredientsGuacamole(Recipe perfectGuacamole) {
         //INGREDIENT
         Set<Ingredient> ingredientSet = new HashSet<>();
         //Avocado
@@ -78,8 +72,9 @@ public class DataLoader implements /*CommandLineRunner,*/ ApplicationListener<Co
         ingredientSet.add(new Ingredient("Ripe Tomato",new BigDecimal(0.5), unitOfMeasureRepository.findByDescription("Peace").get()));
         ingredientSet.add(new Ingredient("Red radishes",new BigDecimal(1), unitOfMeasureRepository.findByDescription("Peace").get()));
         ingredientSet.add(new Ingredient("Tortilla chips",new BigDecimal(2), unitOfMeasureRepository.findByDescription("Package").get()));
-
         perfectGuacamole.setIngredients(ingredientSet);
+
+        recipeRepository.save(perfectGuacamole);
     }
 
     @Override

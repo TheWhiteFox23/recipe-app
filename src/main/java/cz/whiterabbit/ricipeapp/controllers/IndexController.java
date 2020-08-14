@@ -5,6 +5,7 @@ import cz.whiterabbit.ricipeapp.model.UnitOfMeasure;
 import cz.whiterabbit.ricipeapp.repositories.CategoryRepository;
 import cz.whiterabbit.ricipeapp.repositories.RecipeRepository;
 import cz.whiterabbit.ricipeapp.repositories.UnitOfMeasureRepository;
+import cz.whiterabbit.ricipeapp.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,25 +15,15 @@ import java.util.Optional;
 @Controller
 public class IndexController {
 
-    private CategoryRepository categoryRepository;
-    private UnitOfMeasureRepository unitOfMeasureRepository;
-    private RecipeRepository recipeRepository;
+    private RecipeService recipeService;
 
-    public IndexController(CategoryRepository categoryRepository, UnitOfMeasureRepository unitOfMeasureRepository, RecipeRepository recipeRepository) {
-        this.categoryRepository = categoryRepository;
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
-        this.recipeRepository = recipeRepository;
+    public IndexController(RecipeService recipeService) {
+        this.recipeService = recipeService;
     }
 
     @RequestMapping({"/", "", "/index"})
     public String getIndexPage(Model model){
-        Optional<Category> categoryOptional = categoryRepository.findByDescription("American");
-        Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription("Teaspoon");
-        System.out.println("recipe count : " + recipeRepository.count());
-        System.out.println("recipe description : " + recipeRepository.findById(1l).get().getDescription());
-        model.addAttribute("recipes", recipeRepository.findAll());
-        System.out.println("Cat ID is: " + categoryOptional.get().getId());
-        System.out.println("UoM ID is: " + unitOfMeasureOptional.get().getId());
+        model.addAttribute("recipes", recipeService.getAll());
         return "index";
     }
 }
