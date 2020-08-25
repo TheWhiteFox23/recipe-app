@@ -7,15 +7,17 @@ import cz.whiterabbit.ricipeapp.model.Recipe;
 import cz.whiterabbit.ricipeapp.repositories.CategoryRepository;
 import cz.whiterabbit.ricipeapp.repositories.RecipeRepository;
 import cz.whiterabbit.ricipeapp.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-
+@Slf4j
 @Component
 public class DataLoader implements /*CommandLineRunner,*/ ApplicationListener<ContextRefreshedEvent> {
 
@@ -36,6 +38,7 @@ public class DataLoader implements /*CommandLineRunner,*/ ApplicationListener<Co
     }*/
 
     private void insertPerfectGuacamole() {
+        log.debug("inserting recipes");
         Recipe perfectGuacamole = new Recipe();
         perfectGuacamole.getCategories().add(categoryRepository.findByDescription("Mexican").get());
         perfectGuacamole.setPrepTime(10);
@@ -78,7 +81,9 @@ public class DataLoader implements /*CommandLineRunner,*/ ApplicationListener<Co
     }
 
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        log.debug("On Application Event");
         System.out.println("Creating recipe : Perfect Guacamole");
         insertPerfectGuacamole();
     }
